@@ -72,7 +72,7 @@ h2 + .metrics { margin-top:.8rem; }
 .activity { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; }
 .activity p { flex-basis:100%; }
 .pill { display:inline-block; padding:.23rem .55rem; font-size:.84rem; font-weight:700; background:var(--accent-soft); color:var(--ink); border:1px solid var(--line); }
-.pill:is([data-state="failed"],[data-state="returned"],[data-state="blocked"]) { border-color:oklch(58% .16 29); }
+.pill:is([data-state="failed"],[data-state="returned"],[data-state="blocked"],[data-state="conflict"]) { border-color:oklch(58% .16 29); }
 .table-wrap { overflow:auto; }
 table { width:100%; border-collapse:collapse; border-spacing:0; font-size:.9rem; font-variant-numeric:tabular-nums; }
 :where(th,td) { padding:.58rem .6rem; text-align:left; border-bottom:1px solid var(--line); max-width:24rem; overflow-wrap:anywhere; }
@@ -107,6 +107,9 @@ textarea { resize:vertical; }
 .decision { margin-top:.8rem; padding-left:.7rem; border-left:3px solid var(--accent); }
 .schedule-fields { border-top:1px solid var(--line); padding-top:.65rem; }
 .schedule-fields > :not(summary) { margin-top:.7rem; }
+.line-rows { display:grid; gap:.6rem; }
+.line-row { align-items:end; border:1px dashed var(--line); padding:.6rem; }
+.line-row .actions { margin-top:0; }
 body[data-page="results"] .main > div > .panel { margin-top:1rem; }
 .login { display:grid; grid-template-columns:1.65fr minmax(300px,1fr); min-height:100svh; }
 .login-intro { padding:clamp(1.75rem,8.7vw,10rem) clamp(1.75rem,6.9vw,7.4rem); background:var(--nav); color:var(--nav-ink); align-content:center; }

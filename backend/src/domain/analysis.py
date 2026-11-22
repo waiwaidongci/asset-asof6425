@@ -111,6 +111,14 @@ def validate_rows(rows):
     return [dict(asdict(event), event_date=event.event_date.isoformat()) for event in _ordered_events(rows)]
 
 
+def register_at(rows, cutoff):
+    """回放至截止日（含当日），返回全部资产的编号、名称与内部状态，供排借取在管清册。"""
+    ledger = _Ledger(_ordered_events(rows))
+    ledger.advance(_day(cutoff, "盘点截止日"))
+    return [{"asset_id": asset_id, "asset_name": asset.name, "status": asset.status}
+            for asset_id, asset in sorted(ledger.assets.items())]
+
+
 class _Ledger:
     def __init__(self, events):
         self.assets = {}

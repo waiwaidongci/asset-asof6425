@@ -7,6 +7,7 @@ import {session} from '../stores/session.js';
 import {workspace} from '../stores/workspace.js';
 import {button, el, link, p} from '../utils/dom.js';
 import {date} from '../utils/format.js';
+import {plansPanel} from './plan.js';
 
 function runRequest(data, spec) {
   return {dataset_id:Number(data.get('dataset_id')),name:data.get('name'),
@@ -57,9 +58,10 @@ export async function runPage(route, refresh) {
       return action;
     }},
   ],plans,{caption:'定时计划',empty:'还未配置定时计划。'}));
+  const borrow = !scheduling && await plansPanel();
   return el('div',{class:'two-col'}, el('div',{class:'wide-panel'},
     panel(spec.run,session.canWrite ? (datasets.length ? form : empty('请先导入数据。','#inputs','前往导入'))
       : p('只读角色可以查看上方业务流程的历史运行。','empty')),
-    !scheduling && panel('运行记录',runList),scheduleList),
+    !scheduling && panel('运行记录',runList),borrow,scheduleList),
     el('aside',{class:'sidebar-panel'},panel('计算口径',el('ul',{class:'method-list'},spec.methodology.map(text=>el('li',{},text))))));
 }

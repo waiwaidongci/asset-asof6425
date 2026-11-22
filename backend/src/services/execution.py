@@ -8,6 +8,7 @@ from src.domain.spec import SPEC
 from src.models.jobs import Delivery, Run, Schedule
 from src.models.source import Dataset
 from src.services.audit import record
+from src.services.borrow import refresh_plans
 from src.utils.exports import write_report
 from src.utils.time import now
 
@@ -83,6 +84,12 @@ def execute(lease):
         job.export_file = export
         job.error = failure
         record(db, 'worker', f'analysis.{job.status}', job.id, attempt=attempt, reason=failure)
+        if not failure:
+            try:
+                with db.begin_nested():
+                    refresh_plans(db, job)
+            except Exception:
+                log.exception('Plan refresh after run %s failed', job.id)
         if job.schedule_id:
             plan = db.get(Schedule, job.schedule_id)
             ready = not failure and result.get('ready', True)

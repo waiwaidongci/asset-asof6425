@@ -1,3 +1,4 @@
+from src.constants.enums import Arrange
 from src.utils.time import iso
 
 
@@ -27,3 +28,23 @@ def schedule(item):
 def delivery(item):
     return {'id': item.id, 'run_id': item.run_id, 'recipient': item.recipient,
             'state': item.state, 'detail': item.detail, 'created_at': iso(item.created_at)}
+
+
+def plan_counts(events):
+    return {'scheduled': sum(1 for event in events if event.status == Arrange.SCHEDULED),
+            'pending': sum(1 for event in events if event.status == Arrange.PENDING),
+            'conflict': sum(1 for event in events if event.status == Arrange.CONFLICT),
+            'first_pending_reason': next((event.reason for event in events
+                                          if event.status == Arrange.PENDING and event.reason), None)}
+
+
+def plan(item, counts):
+    return {'id': item.id, 'name': item.name, 'status': item.status, 'run_id': item.run_id,
+            'author': item.author, 'created_at': iso(item.created_at),
+            'confirmed_at': iso(item.confirmed_at), **counts}
+
+
+def plan_event(item):
+    return {'id': item.id, 'name': item.name, 'start_date': item.start_date.isoformat(),
+            'end_date': item.end_date.isoformat(), 'priority': item.priority, 'lines': item.lines,
+            'status': item.status, 'assignments': item.assignments, 'reason': item.reason}
